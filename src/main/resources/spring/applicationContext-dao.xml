@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:tx="http://www.springframework.org/schema/tx"
+    xmlns:aop="http://www.springframework.org/schema/aop"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/tx
+        http://www.springframework.org/schema/tx/spring-tx.xsd
+        http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+    <!--读取java配置文件，替换占位符位置-->
+    <context:property-placeholder location="classpath:db.properties" />
+
+    <!--配置DataSource
+        常用DataSource：Druid
+        注意事项：destroy-method需要加上
+        作用：Spring容器关闭时，数据源能够正常关闭；销毁方法调用close(),是将连接关闭，
+        并不是真正的把资源销毁。
+        还可以理解成,当数据库连接不使用的时候,就把该连接重新放到数据池中,方便下次使用调用.
+    -->
+    <bean id = "dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+        <property name="driverClassName" value="${db.driverClassName}" />
+        <property name="url" value="${db.url}" />
+        <property name="username" value="${db.username}" />
+        <property name="password" value="${db.password}" />
+    </bean>
+
+    <!--配置SqlSessionFactory
+    SqlSessionFactory对象的创建，需要依赖于Mybatis的全局配置文件（数据源、别名、映射文件的读取）
+    -->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <!-- 加载mybatis的配置文件（如果配置文件中没有配置项，可以忽略该文件） -->
+        <!--<property name="configLocation" value="classpath:mybatis/SqlMapConfig.xml" />-->
+        <!--注入DataSource-->
+        <property name="dataSource" ref="dataSource" />
+        <!--MyBatis批量别名设置-->
+        <property name="typeAliasesPackage" value="com.kkb.ssm.po"/>
+        <property name="mapperLocations" value="classpath:/mapper/*Mapper.xml"/>
+    </bean>
+
+    <!--批量mapper代理对象的生成-->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <!--指定需要生成的代理接口所在的包名-->
+        <property name="basePackage" value="com.kkb.ssm.mapper" />
+    </bean>
+</beans>

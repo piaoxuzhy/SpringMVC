@@ -25,7 +25,7 @@
     <!--解决No converter found for return value of type报错问题
         POJO不能直接转成json
     -->
-    <mvc:annotation-driven conversion-service="conversionService">
+    <mvc:annotation-driven>
         <mvc:message-converters>
             <bean class="org.springframework.http.converter.StringHttpMessageConverter">
                 <!--<property name="supportedMediaTypes">
@@ -39,13 +39,13 @@
     </mvc:annotation-driven>
 
     <!-- 日期转换器配置 -->
-    <bean id="conversionService" class="org.springframework.context.support.ConversionServiceFactoryBean">
+    <!--<bean id="conversionService" class="org.springframework.context.support.ConversionServiceFactoryBean">
         <property name="converters">
             <set>
                 <bean class="com.kkb.ssm.controller.converter.DateConverter"></bean>
             </set>
         </property>
-    </bean>
+    </bean>-->
 
     <!-- 显式的配置视图解析器 -->
     <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">

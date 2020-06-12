@@ -9,13 +9,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
-@RequestMapping("item")
+@RequestMapping("item1")
 public class ItemController {
-    //@Autowired //应该尽量避免使用变量方式注入
+    @Autowired //应该尽量避免使用变量方式注入
     private ItemService itemService;
 
     //强制依赖的话就用构造器方式
-    @Autowired
+    /*@Autowired
     public ItemController(ItemService itemService) {
         this.itemService = itemService;
     }
@@ -24,7 +24,7 @@ public class ItemController {
     @Autowired
     public void setItemService(ItemService itemService) {
         this.itemService = itemService;
-    }
+    }*/
 
     @RequestMapping("{id}")
     @ResponseBody
